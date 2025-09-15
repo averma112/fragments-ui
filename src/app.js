@@ -1,6 +1,7 @@
 // src/app.js
 
 import { signIn, getUser } from './auth';
+import { getUserFragments } from './api';
 
 async function init() {
   // Get our UI elements
@@ -18,13 +19,14 @@ async function init() {
   if (!user) {
     return;
   }
+  const userFragments = await getUserFragments(user);
 
   // Update the UI to welcome the user
   userSection.hidden = false;
 
   // Show the user's username
   userSection.querySelector('.username').innerText = user.username;
-
+  
   // Disable the Login button
   loginBtn.disabled = true;
 }
