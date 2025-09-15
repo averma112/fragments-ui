@@ -1,0 +1,19 @@
+{
+  "name": "fragments-ui",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Fragments UI testing web app",
+  "scripts": {
+    "start": " npx parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avermna112/fragments-ui.git"
+  },
+  "author": "Ashu",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "oidc-client-ts": "^3.3.0"
+  }
+}
