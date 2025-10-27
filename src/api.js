@@ -2,7 +2,6 @@
 
 // fragments microservice API URL - points to the local backend server
 const apiUrl = 'http://ec2-3-84-128-162.compute-1.amazonaws.com:8080';
-gi
 /**
  * Get the current user's authentication headers (Authorization only)
  * Content-Type should be set by each API call as needed.
