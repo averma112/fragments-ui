@@ -5,6 +5,8 @@
   "description": "Fragments UI testing web app",
   "scripts": {
     "start": " npx parcel index.html",
+    "dev": "npx parcel index.html --port 3000 --open",
+    "build": "npx parcel build index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "oidc-client-ts": "^3.3.0"
+  },
+  "devDependencies": {
+    "process": "^0.11.10"
   }
 }

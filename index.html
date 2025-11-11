@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fragments Manager</title>
+    <title>Fragments Microservice</title>
     <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -251,13 +251,57 @@
         color: var(--border);
         margin-bottom: 1rem;
       }
+
+      /* Optimize scrolling performance */
+      html {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: scroll;
+      }
+      
+      /* Optimize the main scroll container */
+      .fragments-list {
+        -webkit-overflow-scrolling: touch;
+        overflow-anchor: none; /* Prevent scroll jumps */
+        will-change: transform;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        perspective: 1000px;
+        -webkit-perspective: 1000px;
+      }
+      
+      /* Optimize fragment cards */
+      .fragment-card {
+        will-change: transform;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        contain: content;
+        content-visibility: auto;
+      }
+      
+      /* Smooth scrolling for modern browsers */
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+      
+      /* Optimize text rendering */
+      body {
+        text-rendering: optimizeSpeed;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
     </style>
   </head>
   <body>
     <header>
       <div class="container">
         <div class="header-content">
-          <h1>Fragments Manager</h1>
+          <h1>Fragments Microservice</h1>
           <div class="user-info">
             <span id="user-email" class="hidden"></span>
             <button id="login" class="btn btn-primary">
