@@ -2,29 +2,367 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Fragments UI</title>
-    <link rel="stylesheet" href="https://unpkg.com/bamboo.css" />
-    <script type="module" src="src/app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fragments Manager</title>
+    <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --background: #f9fafb;
+        --surface: #ffffff;
+        --text: #1f2937;
+        --text-secondary: #6b7280;
+        --border: #e5e7eb;
+        --error: #dc2626;
+        --success: #059669;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.5;
+        color: var(--text);
+        background-color: var(--background);
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      header {
+        background-color: var(--surface);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--background);
+      }
+
+      .card {
+        background-color: var(--surface);
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        transition: border-color 0.2s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .fragments-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .fragment-card {
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .fragment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .fragment-meta {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+
+      .fragment-content {
+        margin: 0.5rem 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .fragment-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      .btn-icon {
+        padding: 0.25rem;
+        border-radius: 9999px;
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+
+      .alert {
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+      }
+
+      .alert-error {
+        background-color: #fef2f2;
+        color: var(--error);
+        border: 1px solid #fecaca;
+      }
+
+      .alert-success {
+        background-color: #ecfdf5;
+        color: var(--success);
+        border: 1px solid #a7f3d0;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5rem;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      #loading-indicator {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      #loading-indicator.visible {
+        display: flex;
+      }
+
+      .spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 3px solid rgba(37, 99, 235, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-secondary);
+      }
+
+      .empty-state i {
+        font-size: 2.5rem;
+        color: var(--border);
+        margin-bottom: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>Fragments UI</h1>
-    <section>
-      <nav>
-        <button id="login">Login</button>
-      </nav>
-    </section>
-    <section hidden id="user">
-      <h2>Hello <span class="username"></span>!</h2>
-      <div id="fragment-form">
-        <h3>Create a text fragment</h3>
-        <label for="fragment-input">Text</label>
-        <textarea id="fragment-input" rows="4" placeholder="Type something..."></textarea>
-        <div>
-          <button id="submit-fragment">Submit</button>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <h1>Fragments Manager</h1>
+          <div class="user-info">
+            <span id="user-email" class="hidden"></span>
+            <button id="login" class="btn btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <button id="logout" class="btn btn-outline hidden">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
         </div>
-        <h4>Response</h4>
-        <pre id="response" style="white-space: pre-wrap"></pre>
       </div>
-    </section>
+    </header>
+
+    <main class="container">
+      <div id="user-section" class="hidden">
+        <div class="card">
+          <h2>Create New Fragment</h2>
+          <div id="alert" class="alert hidden" role="alert"></div>
+          
+          <form id="fragment-form">
+            <div class="form-group">
+              <label for="fragment-type" class="form-label">Fragment Type</label>
+              <select id="fragment-type" class="form-control" required>
+                <option value="text/plain">Plain Text</option>
+                <option value="text/markdown">Markdown</option>
+                <option value="application/json">JSON</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="fragment-input" class="form-label">Content</label>
+              <textarea 
+                id="fragment-input" 
+                class="form-control" 
+                placeholder="Enter your content here..." 
+                required
+                rows="6"
+              ></textarea>
+              <div id="content-help" class="text-sm text-gray-500 mt-1">
+                For JSON, enter valid JSON data
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" id="submit-fragment" class="btn btn-primary">
+                <span id="submit-text">Create Fragment</span>
+                <span id="submit-spinner" class="loading hidden"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>My Fragments</h2>
+            <button id="refresh-fragments" class="btn btn-outline btn-sm">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+          
+          <div id="loading-indicator">
+            <div class="spinner"></div>
+          </div>
+          
+          <div id="fragments-container">
+            <div id="fragments-list" class="fragments-list">
+              <!-- Fragments will be inserted here by JavaScript -->
+            </div>
+            <div id="empty-state" class="empty-state">
+              <i class="far fa-folder-open"></i>
+              <p>No fragments found. Create your first fragment above!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="login-prompt" class="empty-state">
+        <i class="fas fa-sign-in-alt"></i>
+        <p>Please log in to manage your fragments</p>
+      </div>
+    </main>
+
+    <!-- Modal for viewing fragment details -->
+    <div id="fragment-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">Fragment Details</h3>
+          <button id="close-modal" class="btn btn-icon">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <pre id="modal-content" style="white-space: pre-wrap;"></pre>
+        </div>
+        <div class="modal-footer">
+          <button id="delete-fragment" class="btn btn-outline">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+          <button id="download-fragment" class="btn btn-primary">
+            <i class="fas fa-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
   </body>
 </html>
