@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "description": "Fragments UI testing web app",
   "scripts": {
-    "start": " npx parcel index.html",
-    "dev": "npx parcel index.html --port 3000 --open",
-    "build": "npx parcel build index.html",
+    "start": "parcel serve index.html --port 3000",
+    "dev": "parcel serve index.html --port 3000 --open",
+    "build": "parcel build index.html --public-url ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,17 @@
     "oidc-client-ts": "^3.3.0"
   },
   "devDependencies": {
+    "@parcel/config-default": "^2.9.3",
+    "@parcel/core": "^2.9.3",
+    "@parcel/optimizer-cssnano": "^2.16.1",
+    "@parcel/optimizer-terser": "^2.16.1",
+    "@parcel/packager-html": "^2.9.3",
+    "@parcel/transformer-html": "^2.9.3",
+    "@parcel/transformer-js": "^2.9.3",
+    "parcel": "^2.9.3",
     "process": "^0.11.10"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }

@@ -1,7 +1,7 @@
 // Configuration for the application
 export const config = {
   // API Configuration
-  API_URL: 'http://localhost:8080',
+  API_URL: 'http://ec2-54-237-216-221.compute-1.amazonaws.com:8080',
   
   // AWS Cognito Configuration
   AWS_REGION: 'us-east-1',

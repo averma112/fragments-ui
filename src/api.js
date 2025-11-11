@@ -80,7 +80,9 @@ async function handleResponse(response) {
  * @returns {Promise<Array>} Array of fragments or fragment metadata
  */
 export async function getFragments(expand = false) {
-  // Test different endpoint variations
+  console.log('API_URL from config:', API_URL);
+  
+  // Try different endpoint variations
   const endpoints = [
     `${API_URL}/v1/fragments`,
     `${API_URL}/fragments`,
@@ -90,33 +92,52 @@ export async function getFragments(expand = false) {
   let lastError;
   
   for (const endpoint of endpoints) {
-    const url = new URL(endpoint);
-    if (expand) {
-      url.searchParams.append('expand', '1');
-    }
-
     try {
-      console.log(`Trying endpoint: ${url.toString()}`);
+      const url = new URL(endpoint);
+      
+      if (expand) {
+        url.searchParams.append('expand', '1');
+      }
+
+      console.log(`[getFragments] Trying endpoint: ${url.toString()}`);
+      console.log(`[getFragments] Request headers:`, await getAuthHeaders());
+      
       const response = await fetch(url.toString(), {
         method: 'GET',
-        headers: await getAuthHeaders()
+        headers: await getAuthHeaders(),
+        credentials: 'include' // Include cookies in the request
       });
 
-      if (response.ok) {
-        const result = await handleResponse(response);
-        console.log(`Success with endpoint: ${url.toString()}`);
-        return result.fragments || [];
-      }
+      console.log(`[getFragments] Response status: ${response.status} ${response.statusText}`);
       
-      console.log(`Endpoint ${url.toString()} returned ${response.status}`);
+      if (!response.ok) {
+        console.error(`[getFragments] Request failed with status ${response.status}:`, response.statusText);
+        const errorText = await response.text();
+        console.error('[getFragments] Error response body:', errorText);
+        throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await handleResponse(response);
+      console.log(`[getFragments] Success with endpoint: ${url.toString()}`);
+      return Array.isArray(result) ? result : (result.fragments || []);
       
     } catch (error) {
-      console.error(`Error with endpoint ${url.toString()}:`, error);
+      console.error(`[getFragments] Error with endpoint ${endpoint}:`, error);
       lastError = error;
+      
+      // If this is a network error, log it and try the next endpoint
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        console.error('[getFragments] Network error - could not connect to the server');
+      }
     }
   }
   
-  throw lastError || new Error('All fragment endpoints failed');
+  const errorMessage = lastError ? 
+    `All fragment endpoints failed. Last error: ${lastError.message}` : 
+    'All fragment endpoints failed with no specific error';
+  
+  console.error(errorMessage);
+  throw new Error(errorMessage);
 }
 
 /**
