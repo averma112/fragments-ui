@@ -217,7 +217,7 @@ export async function createFragment(content, type = 'text/plain') {
  * Update an existing fragment
  */
 export async function updateFragment(id, content, type = 'text/plain') {
-  const response = await fetch(`${API_URL}/v1/fragments/${id}`, {
+  const response = await fetch(`${API_URL}/`, {
     method: 'PUT',
     headers: {
       ...getAuthHeaders(),

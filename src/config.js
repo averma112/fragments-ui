@@ -1,13 +1,13 @@
 // Configuration for the application
 export const config = {
   // API Configuration
-  API_URL: 'http://ec2-54-237-216-221.compute-1.amazonaws.com:8080',
+  API_URL: process.env.API_URL,
   
   // AWS Cognito Configuration
-  AWS_REGION: 'us-east-1',
-  AWS_COGNITO_POOL_ID: 'us-east-1_mWEmrcXtI',
-  AWS_COGNITO_CLIENT_ID: '8o2l6geft81bg9dajjaqtuicj',
-  OAUTH_SIGN_IN_REDIRECT_URL: 'http://localhost:1234',
+  AWS_REGION: process.env.AWS_REGION,
+  AWS_COGNITO_POOL_ID: process.env.AWS_COGNITO_POOL_ID ,
+  AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
+  OAUTH_SIGN_IN_REDIRECT_URL: process.env.OAUTH_SIGN_IN_REDIRECT_URL ,
 };
 
 // Log the configuration

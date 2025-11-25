@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "description": "Fragments UI testing web app",
   "scripts": {
-    "start": "parcel serve index.html --port 3000",
-    "dev": "parcel serve index.html --port 3000 --open",
+    "start": "parcel serve index.html --port 1234",
+    "dev": "parcel serve index.html --port 1234 --open",
     "build": "parcel build index.html --public-url ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
