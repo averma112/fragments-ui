@@ -161,56 +161,53 @@ export async function getFragment(id) {
  * @returns {Promise<Object>} The created fragment
  */
 export async function createFragment(content, type = 'text/plain') {
-  // Test different endpoint variations
-  const endpoints = [
-    `${API_URL}/v1/fragments`,
-    `${API_URL}/fragments`,
-    `${API_URL}/api/fragments`
-  ];
-
-  let lastError;
+  const endpoint = `${API_URL}/v1/fragments`;
   
-  for (const endpoint of endpoints) {
-    console.log(`Trying to create fragment at: ${endpoint}`);
-    console.log('Content type:', type);
+  console.log(`Creating fragment at: ${endpoint}`);
+  console.log('Content type:', type);
+  
+  try {
+    const headers = await getAuthHeaders(type);
+    console.log('Request headers:', headers);
     
-    try {
-      const headers = await getAuthHeaders(type);
-      console.log('Request headers:', headers);
-      
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: headers,
-        body: content,
-      });
-      
-      console.log('Response received, status:', response.status);
-      
-      if (response.ok) {
-        const result = await handleResponse(response);
-        console.log('Fragment created successfully at:', endpoint);
-        return result;
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: headers,
+      body: content,
+    });
+    
+    console.log('Response received, status:', response.status);
+    
+    if (!response.ok) {
+      // Try to get error details from response
+      let errorDetails = '';
+      try {
+        const errorData = await response.json();
+        errorDetails = errorData.error?.message || errorData.message || JSON.stringify(errorData);
+      } catch (e) {
+        errorDetails = await response.text();
       }
       
-      // If we get here, it's a 404, so try the next endpoint
-      console.log(`Endpoint ${endpoint} returned 404, trying next...`);
-      
-    } catch (error) {
-      console.error(`Error with endpoint ${endpoint}:`, {
-        message: error.message,
-        status: error.status,
-        url: error.url,
-        data: error.data
-      });
-      lastError = error;
-      // Continue to next endpoint
+      const error = new Error(`Failed to create fragment: ${response.status} ${response.statusText} - ${errorDetails}`);
+      error.status = response.status;
+      error.url = endpoint;
+      console.error('Fragment creation failed:', error);
+      throw error;
     }
+    
+    const result = await handleResponse(response);
+    console.log('Fragment created successfully at:', endpoint);
+    return result;
+    
+  } catch (error) {
+    console.error('Error creating fragment:', {
+      message: error.message,
+      status: error.status,
+      url: error.url,
+      data: error.data
+    });
+    throw error;
   }
-  
-  // If we get here, all endpoints failed
-  const errorMessage = lastError ? lastError.message : 'All endpoints failed';
-  console.error('All fragment creation attempts failed');
-  throw new Error(`Failed to create fragment: ${errorMessage}`);
 }
 
 /**
